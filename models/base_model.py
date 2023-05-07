@@ -30,22 +30,62 @@ class BaseModel:
         """Initialization of the base model"""
         if kwargs:
             for key, value in kwargs.items():
-                if key != "__class__":
+                if key in ('created_at', 'updated_at'):
+                    setattr(self, key, datetime.strptime(
+                        value, "%Y-%m-%dT%H:%M:%S.%f"))
+                elif key == '__class__':
+                    continue
+                else:
                     setattr(self, key, value)
-            if kwargs.get("created_at", None) and type(self.created_at) is str:
-                self.created_at = datetime.strptime(kwargs["created_at"], time)
-            else:
-                self.created_at = datetime.utcnow()
-            if kwargs.get("updated_at", None) and type(self.updated_at) is str:
-                self.updated_at = datetime.strptime(kwargs["updated_at"], time)
-            else:
-                self.updated_at = datetime.utcnow()
-            if kwargs.get("id", None) is None:
-                self.id = str(uuid.uuid4())
         else:
             self.id = str(uuid.uuid4())
-            self.created_at = datetime.utcnow()
+            self.created_at = datetime.now()
             self.updated_at = self.created_at
+        # if kwargs:
+        #     for key, value in kwargs.items():
+        #         if key in ("created_at", "updated_at"):
+        #             setattr(self, key, datetime.strptime(
+        #                 value, '%Y-%m-%dT%H:%M:%S.%f'))
+        #         elif key == '__class__':
+        #             continue
+        #         else:
+        #             setattr(self, key, value)
+        #     if not self.id:
+        #         setattr(self, 'id', str(uuid.uuid4()))
+        #     now = datetime.utcnow()
+        #     if not self.created_at:
+        #         setattr(self, 'created_at', now)
+        #     if not self.updated_at:
+        #         setattr(self, 'updated_at', now)
+        # else:
+        #     self.id = str(uuid.uuid4())
+        #     self.created_at = self.updated_at = datetime.utcnow()
+        # if kwargs:
+        #     for key, value in kwargs.items():
+        #         if key != "__class__":
+        #             setattr(self, key, value)
+            # if kwargs.get("created_at", None) and type(self.created_at)
+            # is str:
+            # if kwargs.get("created_at", None) and isinstance(self.created_at,
+            #                                                  str):
+            #     self.created_at = datetime.strptime(
+            #         kwargs["created_at"], time)
+        #     else:
+        #         self.created_at = datetime.utcnow()
+        #     if kwargs.get("updated_at", None) and type(self.updated_at)
+            # is str:
+            # if kwargs.get("updated_at", None) and isinstance(self.updated_at,
+            #                                                  str):
+            #     self.updated_at = datetime.strptime(
+            #       kwargs["updated_at"], time)
+        #     else:
+        #         self.updated_at = datetime.utcnow()
+        #     if kwargs.get("id", None) is None:
+        #         self.id = str(uuid.uuid4())
+        # else:
+        #     self.id = str(uuid.uuid4())
+        #     self.created_at = datetime.utcnow()
+        #     self.updated_at = self.created_at
 
     def __str__(self):
         """String representation of the BaseModel class"""
